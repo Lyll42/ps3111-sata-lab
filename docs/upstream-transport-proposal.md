@@ -35,3 +35,8 @@ pyproject.toml had no license declaration at the tested commit. No psychite
 source is redistributed here.
 
 Prototype repository: [PS3111 SATA Lab](https://github.com/Lyll42/ps3111-sata-lab).
+
+The repository now also includes the separate [recovery source workflow](../recovery/README.md),
+with configurable targets, factory and offline-capture sources, and build
+instructions. Vendor binaries, firmware and private device fixtures remain
+external inputs. This addition has been validated offline, not on another SSD.

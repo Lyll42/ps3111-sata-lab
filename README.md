@@ -1,7 +1,8 @@
 # PS3111 SATA Lab
 
 Windows SATA transport tools for Phison S11/PS3111 controllers: a SAT12/SAT16
-converter, a read-only IDENTIFY diagnostic and an x86 C bridge.
+converter, a read-only IDENTIFY diagnostic, an x86 C bridge and a target-specific
+recovery workflow.
 
 **Experimental.** SATA communication, NAND queries and RAM transfers worked on
 one SSD. That drive later failed sustained writes. Hardware compatibility with
@@ -16,6 +17,9 @@ other drives remains untested.
   PS3111 in ROM mode. The native target remains unconfigured until a local
   PNP instance ID is supplied.
 - Technical findings, an anonymized case study and proposals for psychite's authors.
+- [Full recovery sources and build instructions](recovery/README.md): Burner RAM
+  loading, VUC diagnostics, MPTool transport patching, factory initialization,
+  optional manufacturer erase, offline capture and write/read verification.
 
 The package excludes firmware, MPTool/MP_API, compilers, unlock keys, psychite
 source, NAND dumps and identifying information from the test machine. The
@@ -77,14 +81,15 @@ The build script runs a conversion test in memory. To use the hardware
 probe, the local `native/target_config.h` must contain your own exact PNP
 instance ID.
 
-The bridge is not a complete distribution of MPTool adapted for SATA.
-Additional VUC queries and factory initialization require further development
-and review. Obtain third-party programs and files from their authors;
-they are not redistributed here.
+For the complete workflow, use [recovery/](recovery/README.md). It builds a private
+package from your own matching vendor files and device profile. Its destructive
+operations are separate from the read-only CLI above. Third-party programs and
+firmware remain external dependencies; they are not redistributed here.
 
 ## Documentation
 
 - [Hardware results and limitations](docs/case-study.md)
+- [Recovery workflow and source map](recovery/README.md)
 - [Transport details](docs/transport-findings.md)
 - [Source provenance](docs/provenance.md)
 - [Package validation](docs/validation.md)

@@ -26,7 +26,9 @@ The transport experiment succeeded; the device did not become reliable storage.
 A short sample was insufficient to establish sustained-write stability. Software
 observations alone do not prove that the underlying physical fault is irreversible.
 
-The public CLI contains only IDENTIFY. RAM loading, factory programming and the
-destructive write tests described above are historical observations, not public
-commands provided by this package. Offline simulations used explicitly synthetic
-health values to inspect control flow; these were never used as hardware results.
+The default CLI contains only IDENTIFY. The separate [recovery workflow](../recovery/README.md)
+now includes sources for RAM loading, factory programming and destructive
+write/read tests. Its configurable version has been checked offline; hardware
+results in this table still refer to the original device-specific implementation.
+Offline simulations used explicitly synthetic health values to inspect control
+flow; these were never used as hardware results.

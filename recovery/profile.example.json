@@ -1,0 +1,12 @@
+{
+  "pnp_id": "SCSI\\DISK&VEN_PS3111&PROD_\\REPLACE_WITH_ROM_INSTANCE",
+  "normal_pnp_id": "SCSI\\DISK&VEN_&PROD_YOUR_MODEL\\REPLACE_WITH_NORMAL_INSTANCE",
+  "disk_index": 4,
+  "model": "REPLACE_WITH_ORIGINAL_MODEL",
+  "serial": "REPLACE_WITH_SERIAL",
+  "sectors": 234441648,
+  "controller_id0": 0,
+  "controller_id1": 0,
+  "controller_revision": 3,
+  "nand_id_prefix": "98 3e 98 b3 76 e3"
+}

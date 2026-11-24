@@ -1,0 +1,2 @@
+# Install psychite separately from its upstream repository; it is not vendored.
+pefile>=2024.8.26

@@ -16,8 +16,11 @@ firmware images, generated firmware byte arrays, NAND dumps, compiler binaries,
 device-specific scripts and private configuration/logs. No redistribution
 permission for those materials is asserted.
 
-The public native bridge excludes factory operations and VUC/NAND diagnostics.
-Its target configuration example is deliberately unconfigured.
+The default `native/` bridge and CLI are read-only. The separate `recovery/`
+directory contains the factory runner, VUC diagnostics, RAM loader and offline
+capture sources. Per-device data is generated locally from user-supplied files;
+none of the generated firmware arrays or original device fixtures are included.
+All target examples are deliberately unconfigured.
 
 Hardware results come from the single-device investigation. Package tests run
 offline; see [validation](validation.md) for the checks performed.

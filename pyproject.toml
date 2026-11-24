@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ps3111-sata-lab"
-version = "0.1.0a1"
-description = "Experimental Windows SATA transport study and guarded IDENTIFY diagnostics"
+version = "0.2.0a1"
+description = "Experimental PS3111 Windows SATA diagnostics and recovery source workflow"
 requires-python = ">=3.10"
 license = {file = "LICENSE"}
 readme = "README.md"

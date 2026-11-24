@@ -5,6 +5,10 @@ build/
 dist/
 *.egg-info/
 native/target_config.h
+**/recovery_config.h
+**/factory_data*.h
+**/capture_identify.h
+**/capture_nand.h
 targets/
 *.exe
 *.dll
