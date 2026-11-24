@@ -1,97 +1,99 @@
 # PS3111 SATA Lab
 
-Prototipo experimental para estudiar el acceso SATA directo a controladores
-Phison S11/PS3111 desde Windows. Incluye un conversor SAT12/SAT16, un diagnóstico
-IDENTIFY con selección explícita del disco y una biblioteca C de laboratorio.
+An experimental project exploring direct SATA access to Phison S11/PS3111
+controllers on Windows. It includes a SAT12/SAT16 converter, an IDENTIFY
+diagnostic with explicit device selection, and a laboratory C library.
 
-**Estado: investigación y diagnóstico de solo lectura.** La adaptación local
-consiguió comunicación SATA, consultas NAND y transferencias RAM, pero el SSD
-ensayado falló una escritura sostenida. Ese resultado no demuestra una reparación
-exitosa ni compatibilidad con otros SSD.
+**Status: research and read-only diagnostics.** The local investigation achieved
+SATA communication, NAND queries and RAM transfers, but the tested SSD failed
+sustained writes. These results do not establish a successful repair or
+compatibility with other SSDs.
 
-## Qué contiene
+## Contents
 
-- Conversión de registros SAT a las estructuras ATA de Windows, con pruebas offline.
-- CLI que, tras verificar el destino, permite exclusivamente una lectura ATA
-  IDENTIFY de 512 bytes. El modo predeterminado solo muestra el plan.
-- Código C x86 del puente de laboratorio y de un selector PNP para PS3111 en ROM.
-  El destino nativo queda desconfigurado hasta proporcionar un ID PNP local.
-- Hallazgos técnicos, un caso anonimizado y propuestas para los autores de psychite.
+- SAT register conversion to Windows ATA structures, with offline tests.
+- A CLI that verifies the target and permits only one 512-byte ATA IDENTIFY
+  read. The default mode displays a plan without accessing hardware.
+- x86 C source for the laboratory bridge and a PNP target selector for a
+  PS3111 in ROM mode. The native target remains unconfigured until a local
+  PNP instance ID is supplied.
+- Technical findings, an anonymized case study and proposals for psychite's authors.
 
-El paquete no incluye firmwares, MPTool/MP_API, compiladores, claves de desbloqueo,
-código de psychite, volcados NAND ni información identificatoria del equipo usado.
-No ofrece funciones de borrado, flasheo o escritura de datos en el diagnóstico CLI.
+The package excludes firmware, MPTool/MP_API, compilers, unlock keys, psychite
+source, NAND dumps and identifying information from the test machine. The
+diagnostic CLI provides no erase, flash or data-write operations.
 
-## Instalación y pruebas
+## Installation and tests
 
-Python 3.10 o posterior. Para las pruebas no hace falta Windows, administrador
-ni un SSD conectado:
+Python 3.10 or later is required. The tests do not require Windows,
+administrator privileges or a connected SSD:
 
 ```powershell
 python -m pip install -e .
 python -m unittest discover -s tests -v
 ```
 
-## Diagnóstico Windows
+## Windows diagnostics
 
-`--list` consulta metadatos de Windows; su salida puede contener números de serie.
-Guardá tus configuraciones en `targets/`, que está excluida de Git.
+`--list` queries Windows metadata; its output may include serial numbers.
+Keep private target configurations in `targets/`, which is excluded from Git.
 
 ```powershell
 python -m ps3111_sata --list
 ```
 
-Copiá `examples/target.example.json` a un archivo privado y reemplazá todos los
-valores por el índice, ID PNP, modelo, firmware, serie y cantidad de sectores
-esperados del SSD elegido. El archivo de ejemplo contiene un ID inválido a propósito.
+Copy `examples/target.example.json` to a private file and replace all values
+with the expected index, PNP instance ID, model, firmware, serial number and
+sector count of the selected SSD. The example contains an intentionally
+invalid PNP instance ID.
 
 ```powershell
-# Sin abrir discos: valida el archivo y muestra un plan de una sola lectura.
-python -m ps3111_sata --target targets/mi-ssd.json
+# Validate the configuration and display a single-read plan without opening disks.
+python -m ps3111_sata --target targets/my-ssd.json
 
-# Desde una consola elevada: una sola lectura, si coinciden todos los controles.
-python -m ps3111_sata --target targets/mi-ssd.json --execute-identify
+# From an elevated console: perform one read if all target checks pass.
+python -m ps3111_sata --target targets/my-ssd.json --execute-identify
 ```
 
-La CLI rechaza unidades de arranque/sistema, conexiones diferentes de SATA,
-identidades ambiguas y cambios de destino. También comprueba los datos ATA reales.
-Una respuesta incompleta o un error detienen la operación; no hay reintentos
-automáticos ni selección automática de otro disco. La serie se oculta en el
-resultado del diagnóstico.
+The CLI rejects boot/system disks, non-SATA connections, ambiguous identities
+and target changes. It also checks the actual ATA identity data. An incomplete
+response or error stops the operation, with no automatic retries or selection
+of another disk. The diagnostic result redacts the serial number.
 
-## Biblioteca C y relación con MPTool
+## C library and relationship to MPTool
 
-Los fuentes `native/` documentan el puente probado durante la investigación.
-`SataGuard.dll` bloquea todos los dispositivos raw; `TargetSataGuard.dll` permite
-solo IDENTIFY para un PS3111/SBRM02.0 en ROM con ID PNP exacto y bus SATA.
+The `native/` sources document the bridge investigated locally.
+`SataGuard.dll` blocks all raw-device access. `TargetSataGuard.dll` permits only
+IDENTIFY for a PS3111/SBRM02.0 in ROM mode with an exact PNP instance ID and a
+SATA connection.
 
-Para compilar, se probó TinyCC 0.9.27 **x86** en Windows. El compilador se consigue
-por separado del proyecto TinyCC. La estructura nativa usada por estos fuentes
-es de 32 bits; no compilarla como si fuera de 64 bits.
+The sources were compiled with TinyCC 0.9.27 **x86** on Windows. Obtain the
+compiler separately from the TinyCC project. These native sources use a
+32-bit structure layout; do not compile them as 64-bit code.
 
 ```powershell
-.\native\build.ps1 -Compiler C:\ruta\al\tcc-x86\tcc.exe
+.\native\build.ps1 -Compiler C:\path\to\tcc-x86\tcc.exe
 ```
 
-El script ejecuta únicamente una prueba de conversión en memoria. El archivo
-local `native/target_config.h` debe contener el ID PNP propio para usar el probe.
-No ejecutar el probe del SSD defectuoso usado en el caso de estudio.
+The build script runs only a memory-only conversion test. To use the hardware
+probe, the local `native/target_config.h` must contain your own exact PNP
+instance ID. Do not run the probe against the failed SSD from the case study.
 
-El puente no constituye una distribución completa de MPTool adaptado. Las
-consultas VUC posteriores y la inicialización de fábrica requieren trabajo
-adicional y revisión. Los programas y archivos de terceros se obtienen de sus
-autores y no se redistribuyen aquí.
+The bridge is not a complete distribution of MPTool adapted for SATA.
+Additional VUC queries and factory initialization require further development
+and review. Obtain third-party programs and files from their authors;
+they are not redistributed here.
 
-## Documentación
+## Documentation
 
-- [Resultados reales y límites](docs/case-study.md)
-- [Detalles del transporte](docs/transport-findings.md)
-- [Procedencia del código](docs/provenance.md)
-- [Verificación del paquete](docs/validation.md)
-- [Propuesta técnica para psychite](docs/upstream-transport-proposal.md)
-- [Borrador sobre el recurso faltante](docs/upstream-package-data-issue.md)
+- [Hardware results and limitations](docs/case-study.md)
+- [Transport details](docs/transport-findings.md)
+- [Source provenance](docs/provenance.md)
+- [Package validation](docs/validation.md)
+- [Technical proposal for psychite](docs/upstream-transport-proposal.md)
+- [Missing package resource report draft](docs/upstream-package-data-issue.md)
 
-## Licencia
+## License
 
-MIT para el código original incluido en este repositorio. Las licencias de
-proyectos externos y herramientas de fábrica se gestionan por separado.
+The original code included in this repository is licensed under MIT.
+External projects and factory tools are subject to their own licenses.

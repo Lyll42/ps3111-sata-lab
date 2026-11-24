@@ -1,4 +1,7 @@
-# Draft title: Native Windows SATA backend: prototype and PS3111 observations
+# Native Windows SATA backend: prototype and PS3111 observations
+
+The proposal was submitted as [psychite issue #2](https://github.com/trulycrisp/psychite/issues/2).
+The issue links to this document for the detailed technical findings.
 
 Hi! We investigated direct Windows SATA access on one PS3111-S11 SSD using
 psychite at commit 15a8a845566903e2b1824bcf8da043848a187fdc.
@@ -27,4 +30,4 @@ offline tests and anonymized notes. No vendor binaries or firmware are bundled.
 Could you also clarify the project's license? We did not find one in the root
 tree at that commit and have not redistributed psychite source.
 
-This is a draft for review; it has not been posted or sent.
+Prototype repository: [PS3111 SATA Lab](https://github.com/Lyll42/ps3111-sata-lab).
