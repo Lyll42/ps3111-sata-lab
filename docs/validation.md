@@ -17,5 +17,5 @@ and local user paths.
 The [initial GitHub Actions run](https://github.com/Lyll42/ps3111-sata-lab/actions/runs/45472586857)
 passed all four combinations of Windows/Ubuntu and Python 3.11/3.13.
 Other Python versions and Linux have not been tested locally. These offline
-checks do not establish hardware compatibility of the cleaned package. Hardware observations
+checks do not establish hardware compatibility of the public package. Hardware observations
 refer to the earlier single-device investigation in [case-study.md](case-study.md).

@@ -3,15 +3,15 @@
 The proposal was submitted as [psychite issue #2](https://github.com/trulycrisp/psychite/issues/2).
 The issue links to this document for the detailed technical findings.
 
-Hi! We investigated direct Windows SATA access on one PS3111-S11 SSD using
-psychite at commit 15a8a845566903e2b1824bcf8da043848a187fdc.
+The investigation used one PS3111-S11 SSD connected directly to SATA on Windows
+and psychite at commit `15a8a845566903e2b1824bcf8da043848a187fdc`.
 
 An experimental SAT12/SAT16-to-ATA_PASS_THROUGH_DIRECT route worked on that
-SATA/AHCI setup. We verified IDENTIFY, NAND/controller queries and an 80-command
+SATA/AHCI setup. Tests covered IDENTIFY, NAND/controller queries and an 80-command
 Burner RAM sequence. The SSD itself subsequently failed sustained writes, so
-this is transport evidence rather than a successful repair claim.
+these results establish transport operation on that setup. The drive was not repaired.
 
-A few findings might be useful upstream:
+## Implementation findings
 
 - The native Windows structure is 40 bytes for x86 and 48 bytes for x64 callers.
   The Windows 48-bit and DMA flags are 8 and 16 respectively.
@@ -23,11 +23,15 @@ A few findings might be useful upstream:
   attempts returned an unchanged 0xec field and all-zero identity data.
 - Completion snapshots cannot substitute for live asynchronous register polling.
 
-Would a native Windows SATA backend be welcome, and what interface/tests would
-you prefer? We prepared an independent codec, a guarded IDENTIFY-only reader,
-offline tests and anonymized notes. No vendor binaries or firmware are bundled.
+## Proposed contribution
 
-Could you also clarify the project's license? We did not find one in the root
-tree at that commit and have not redistributed psychite source.
+The prototype includes an independent codec, a guarded IDENTIFY-only reader,
+offline tests and anonymized hardware notes. It excludes vendor binaries and
+firmware. The upstream issue asks whether a native Windows SATA backend would
+be useful and which interface and tests a contribution should use.
+
+The issue also requests license clarification: the psychite root tree and
+pyproject.toml had no license declaration at the tested commit. No psychite
+source is redistributed here.
 
 Prototype repository: [PS3111 SATA Lab](https://github.com/Lyll42/ps3111-sata-lab).

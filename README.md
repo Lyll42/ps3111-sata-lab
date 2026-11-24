@@ -1,20 +1,18 @@
 # PS3111 SATA Lab
 
-An experimental project exploring direct SATA access to Phison S11/PS3111
-controllers on Windows. It includes a SAT12/SAT16 converter, an IDENTIFY
-diagnostic with explicit device selection, and a laboratory C library.
+Windows SATA transport tools for Phison S11/PS3111 controllers: a SAT12/SAT16
+converter, a read-only IDENTIFY diagnostic and an x86 C bridge.
 
-**Status: research and read-only diagnostics.** The local investigation achieved
-SATA communication, NAND queries and RAM transfers, but the tested SSD failed
-sustained writes. These results do not establish a successful repair or
-compatibility with other SSDs.
+**Experimental.** SATA communication, NAND queries and RAM transfers worked on
+one SSD. That drive later failed sustained writes. Hardware compatibility with
+other drives remains untested.
 
 ## Contents
 
 - SAT register conversion to Windows ATA structures, with offline tests.
 - A CLI that verifies the target and permits only one 512-byte ATA IDENTIFY
   read. The default mode displays a plan without accessing hardware.
-- x86 C source for the laboratory bridge and a PNP target selector for a
+- x86 C source for the bridge and a PNP target selector for a
   PS3111 in ROM mode. The native target remains unconfigured until a local
   PNP instance ID is supplied.
 - Technical findings, an anonymized case study and proposals for psychite's authors.
@@ -62,7 +60,7 @@ of another disk. The diagnostic result redacts the serial number.
 
 ## C library and relationship to MPTool
 
-The `native/` sources document the bridge investigated locally.
+The `native/` directory contains the C bridge and its test programs.
 `SataGuard.dll` blocks all raw-device access. `TargetSataGuard.dll` permits only
 IDENTIFY for a PS3111/SBRM02.0 in ROM mode with an exact PNP instance ID and a
 SATA connection.
@@ -75,9 +73,9 @@ compiler separately from the TinyCC project. These native sources use a
 .\native\build.ps1 -Compiler C:\path\to\tcc-x86\tcc.exe
 ```
 
-The build script runs only a memory-only conversion test. To use the hardware
+The build script runs a conversion test in memory. To use the hardware
 probe, the local `native/target_config.h` must contain your own exact PNP
-instance ID. Do not run the probe against the failed SSD from the case study.
+instance ID.
 
 The bridge is not a complete distribution of MPTool adapted for SATA.
 Additional VUC queries and factory initialization require further development
@@ -91,7 +89,7 @@ they are not redistributed here.
 - [Source provenance](docs/provenance.md)
 - [Package validation](docs/validation.md)
 - [Technical proposal for psychite](docs/upstream-transport-proposal.md)
-- [Missing package resource report draft](docs/upstream-package-data-issue.md)
+- [Missing package resource](docs/upstream-package-data-issue.md)
 
 ## License
 

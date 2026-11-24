@@ -1,7 +1,9 @@
-# Draft title: Installed package can omit phison_s11/xor_0561_data.bin
+# Missing package resource: xor_0561_data.bin
 
-At commit 15a8a845566903e2b1824bcf8da043848a187fdc, the installed package in our
-Windows environment failed to import phison_s11.algorithm because the resource
+Status: observed locally; not yet reported upstream.
+
+At commit `15a8a845566903e2b1824bcf8da043848a187fdc`, the installed package on
+Windows failed to import phison_s11.algorithm because the resource
 `phison_s11/xor_0561_data.bin` was absent from site-packages. A source checkout
 containing the resource worked after correcting the package-data inclusion.
 
@@ -19,7 +21,5 @@ The local packaging workaround was:
 phison_s11 = ["xor_0561_data.bin"]
 ```
 
-Please confirm whether explicit package-data inclusion is the preferred fix.
-This report intentionally excludes local usernames, device identities and paths.
-
-Draft only; not submitted. The workaround is not presented as a tested upstream PR.
+This workaround resolved the local import failure. A clean wheel build and
+installation should confirm the fix before submitting an upstream patch.
